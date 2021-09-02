@@ -16,17 +16,25 @@
         <p class="text-center">Search Your Favorite Books!</p>
 
         <!-- search field and button -->
-        <div class="input-group mb-3 w-50 mx-auto">
-            <input id="search-field" type="text" class="form-control" placeholder="Recipient's username"
+        <div class="input-group mb-3 w-75 mx-auto">
+            <input id="search-field" type="text" class="form-control" placeholder="Enter a book name"
                 aria-label="Recipient's username" aria-describedby="button-addon2">
             <button class="btn btn-outline-secondary" type="button" id="search-button">Search</button>
         </div>
 
+        <!-- spinner -->
+        <button id="spinner-grow" class="btn btn-secondary mx-auto" style="display: none;" type="button" disabled>
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            Loading...
+        </button>
+
         <!-- show number of results found -->
-        <p id="number-of-results" class="text-center"></p>
+        <p id="number-of-results" class="text-center mb-5">
+
+        </p>
 
         <!-- search results container -->
-        <div id="books-container" class="row row-cols-1 row-cols-md-3 g-4">
+        <div id="books-container" class="row row-cols-1 row-cols-md-4 g-4">
 
         </div>
     </div>

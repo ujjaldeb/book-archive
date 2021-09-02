@@ -1,31 +1,39 @@
+// if the click event fires on the search button, data is fetched and displayed based on the search text provided by the users
 document.getElementById('search-button').addEventListener('click', () => {
     // collect the search text from users
     const searchField = document.getElementById('search-field');
     const searchText = searchField.value;
     searchField.value = '';
+    document.getElementById('number-of-results').innerHTML = '';
+    document.getElementById('spinner-grow').style.display = 'block';
 
     // request data from api
     fetch(`http://openlibrary.org/search.json?q=${searchText}`)
         .then(res => res.json())
-        .then(data => displayBooks(data.docs))
-        .catch(error => console.log(error));
+        .then(data => displayBooks(data.docs, data.numFound))
+        .catch(error => displayError(error));
 });
 
 // show search results
-const displayBooks = books => {
-    // console.log(books);
+const displayBooks = (books, resultsFound) => {
+    // select a container element inside which all the searched books will be shown
     const booksContainer = document.getElementById('books-container');
-    let count = 0;
-    books.forEach(book => {
-        console.log(book);
-        count++;
-        let imageUrl
+
+    // clear previous content found for a search
+    booksContainer.innerHTML = '';
+
+    // loop through all the elements of the array object found from api response
+    books.forEach((book) => {
+        let imageUrl;
+
+        // if the cover_i property exists use that, otherwise use a default image
         if (book.cover_i) {
             imageUrl = `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`;
         } else {
-            imageUrl = `../images/bookCover.png`;
+            imageUrl = `../images/book-cover.jpg`;
         }
 
+        // create a div element that includes details of a single book
         const aBook = document.createElement('div');
         aBook.classList.add('col');
 
@@ -33,14 +41,26 @@ const displayBooks = books => {
         <div class="card h-100">
             <img src="${imageUrl}" class="card-img-top" alt="...">
             <div class="card-body">
-                <h5 class="card-title">${book.title ? book.title : 'Unknown'}</h5>
-                <p class="card-text"><b>Author</b>: ${book.author_name ? book.author_name[0] : 'Unknown'}</p>
-                <p><b>First Edition</b>: ${book.first_publish_year ? book.first_publish_year : 'Unknown'}</p>
-                <p class="card-text"><b>Publisher</b>: ${book.publisher ? book.publisher[0] : 'Unknown'}</p>
+                <h4 class="card-title">${book.title ? book.title : 'Unknown'}</h4>
+                <span class="card-text"><b>Author:</b> ${book.author_name ? book.author_name[0] : 'Unknown'}</span><br/>
+                <span class="card-text"><b>Publisher:</b> ${book.publisher ? book.publisher[0] : 'Unknown'}</span><br/>
+                <span class="card-text"><b>First publishing year:</b> ${book.first_publish_year ? book.first_publish_year : 'Unknown'}</span><br/>
+                <span class="card-text"><b>Language:</b> ${book.language ? book.language[0] : 'Unknown'}</span>
             </div>
         </div>
         `;
+
         booksContainer.appendChild(aBook);
     });
-    document.getElementById('number-of-results').innerText = `Total ${count} reuslts found.`;
+
+    // loading spinner goes out as soon as data is loaded and displayed
+    document.getElementById('spinner-grow').style.display = 'none';
+
+    // the number of results found for the searched text is shown here
+    document.getElementById('number-of-results').innerHTML = books.length ? `${books.length} of ${resultsFound} reuslts shown.` : `<span class="text-warning">No result found. Please enter an appropriate book name</span>`;
+};
+
+// error handler
+const displayError = error => {
+    console.log(error);
 };
