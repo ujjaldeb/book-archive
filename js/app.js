@@ -16,7 +16,7 @@ document.getElementById('search-button').addEventListener('click', () => {
     document.getElementById('books-container').innerHTML = '';
 
     // request data from api
-    fetch(`http://openlibrary.org/search.json?q=${searchText}`)
+    fetch(`https://openlibrary.org/search.json?q=${searchText}`)
         .then(res => res.json())
         .then(data => displayBooks(data.docs, data.numFound))
         .catch(error => displayError(error));
