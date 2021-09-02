@@ -3,9 +3,17 @@ document.getElementById('search-button').addEventListener('click', () => {
     // collect the search text from users
     const searchField = document.getElementById('search-field');
     const searchText = searchField.value;
+
+    // clear the input from the search field
     searchField.value = '';
+
     document.getElementById('number-of-results').innerHTML = '';
+
+    // showing loading spinner when searching for a book
     document.getElementById('spinner-grow').style.display = 'block';
+
+    // clear previous content found for a search
+    document.getElementById('books-container').innerHTML = '';
 
     // request data from api
     fetch(`http://openlibrary.org/search.json?q=${searchText}`)
@@ -18,9 +26,6 @@ document.getElementById('search-button').addEventListener('click', () => {
 const displayBooks = (books, resultsFound) => {
     // select a container element inside which all the searched books will be shown
     const booksContainer = document.getElementById('books-container');
-
-    // clear previous content found for a search
-    booksContainer.innerHTML = '';
 
     // loop through all the elements of the array object found from api response
     books.forEach((book) => {
@@ -49,7 +54,7 @@ const displayBooks = (books, resultsFound) => {
             </div>
         </div>
         `;
-
+        // every time a single book is pushed into the booksContainer as a child
         booksContainer.appendChild(aBook);
     });
 
